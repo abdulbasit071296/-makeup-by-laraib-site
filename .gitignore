@@ -1,0 +1,26 @@
+node_modules
+.next
+out
+build
+*.log
+.env*
+.DS_Store
+
+# Unused Next.js scaffold kept on disk for possible future use,
+# not part of the deployed static site + admin server.
+app/
+components/
+data/
+lib/
+public/
+next.config.mjs
+next-env.d.ts
+package.json
+package-lock.json
+postcss.config.mjs
+tailwind.config.ts
+tsconfig.json
+
+# Local-only secrets — set ADMIN_PASSWORD as an environment variable
+# on the host instead of committing a password hash.
+admin-config.json

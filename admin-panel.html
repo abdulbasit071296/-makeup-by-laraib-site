@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site Admin | Makeup by Laraib</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <link rel="stylesheet" href="admin/admin.css" />
+</head>
+<body>
+
+  <div class="admin-app" id="admin-app">
+    <header class="admin-topbar">
+      <div class="admin-topbar-title">
+        <img src="images/logo.png" alt="" class="admin-topbar-logo" />
+        <span>Makeup by Laraib — Site Admin</span>
+      </div>
+      <div class="admin-topbar-actions">
+        <span id="save-status" class="save-status"></span>
+        <a href="index.html" target="_blank" class="btn-ghost">View Site</a>
+        <button type="button" id="logout-btn" class="btn-ghost">Log Out</button>
+      </div>
+    </header>
+
+    <div class="admin-body">
+      <nav class="admin-tabs" id="admin-tabs" aria-label="Sections">
+        <button type="button" class="admin-tab" data-tab="header">Header &amp; Contact</button>
+        <button type="button" class="admin-tab" data-tab="hero">Hero</button>
+        <button type="button" class="admin-tab" data-tab="services">Services</button>
+        <button type="button" class="admin-tab" data-tab="gallery">Our Brides</button>
+        <button type="button" class="admin-tab" data-tab="testimonials">Testimonials</button>
+        <button type="button" class="admin-tab" data-tab="instagram">Instagram</button>
+        <button type="button" class="admin-tab" data-tab="footer">Footer</button>
+      </nav>
+
+      <main class="admin-panel" id="admin-panel">
+        <!-- rendered by admin/admin.js -->
+      </main>
+    </div>
+  </div>
+
+  <script src="admin/admin.js"></script>
+</body>
+</html>

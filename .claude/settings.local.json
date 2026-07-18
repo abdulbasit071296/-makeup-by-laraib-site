@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -sL https://raw.githubusercontent.com/anthropics/skills/main/skills/frontend-design/LICENSE.txt -o /tmp/frontend-design-license.txt)",
+      "Read(//tmp/**)",
+      "Bash(curl -sL https://raw.githubusercontent.com/anthropics/skills/main/skills/frontend-design/SKILL.md -o /tmp/frontend-design-skill.md)",
+      "Bash(ls -la ~/.claude/skills/ 2>&1 || echo \"NOT_FOUND\")",
+      "Bash(mkdir -p ~/.claude/skills/frontend-design)",
+      "Bash(cp \"/c/Users/Admin/AppData/Local/Temp/frontend-design-skill.md\" ~/.claude/skills/frontend-design/SKILL.md)",
+      "Bash(cp \"/c/Users/Admin/AppData/Local/Temp/frontend-design-license.txt\" ~/.claude/skills/frontend-design/LICENSE.txt)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:registry.npmjs.org)",
+      "Bash(npm install *)",
+      "Bash(uipro --help)",
+      "Bash(uipro init *)",
+      "Bash(npm audit *)",
+      "Bash(npm view *)",
+      "Bash(node -e ' *)",
+      "Bash(mkdir -p \"/c/Users/Admin/Desktop/project/.claude\")",
+      "Bash(npm run *)"
+    ]
+  }
+}

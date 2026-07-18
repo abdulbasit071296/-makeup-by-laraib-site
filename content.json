@@ -1,0 +1,315 @@
+{
+  "header": {
+    "logo": "images/1784331865906-logo_without.png",
+    "brandName": "Makeup by Laraib",
+    "navHome": "Home",
+    "navServices": "Services",
+    "navGallery": "Our Brides",
+    "navTestimonials": "Testimonials",
+    "navContact": "Contact",
+    "navCta": "Book Now"
+  },
+  "common": {
+    "bookWhatsAppText": "Book on WhatsApp"
+  },
+  "hero": {
+    "eyebrow": "Welcome to",
+    "title": "Makeup by <em>Laraib</em>",
+    "subtitle": "Luxury makeup artistry for brides and every special occasion. Creating timeless, elegant looks that enhance your natural beauty. Based in Peshawar, by appointment.",
+    "bgImage": "images/hero-image.jpg",
+    "video": "images/hero-video-3.mp4"
+  },
+  "services": {
+    "eyebrow": "Price List",
+    "heading": "Our Services",
+    "lead": "From bridal glamour to special occasion makeup, explore our services and pricing below. All prices are in PKR. Appointments are available through WhatsApp.",
+    "cards": [
+      {
+        "image": "images/bridal-6.jpg",
+        "imageAlt": "Bridal makeup by Laraib",
+        "title": "Bridal & Party Makeup",
+        "items": [
+          {
+            "name": "Bridal Makeup (3 Days)",
+            "price": "Rs. 40,000"
+          },
+          {
+            "name": "Mehndi / Engagement / Nikkah",
+            "price": "Rs. 12,000"
+          },
+          {
+            "name": "Baraat / Walima",
+            "price": "Rs. 20,000"
+          },
+          {
+            "name": "Signature Party Makeup",
+            "price": "Rs. 7,500"
+          },
+          {
+            "name": "Party Makeup",
+            "price": "Rs. 5,500"
+          },
+          {
+            "name": "",
+            "price": ""
+          }
+        ],
+        "note": "",
+        "whatsappText": "Hi Laraib, I'd like to know more about Bridal & Party Makeup."
+      },
+      {
+        "image": "images/hairstyle.jpg",
+        "imageAlt": "Bridal hairstyling by Laraib",
+        "title": "Hairstyling",
+        "items": [
+          {
+            "name": "Bridal Hairstyle",
+            "price": "Rs. 4,000"
+          },
+          {
+            "name": "Party Hairstyle",
+            "price": "Rs. 2,800"
+          },
+          {
+            "name": "Kids Hairstyle",
+            "price": "Rs. 1,000"
+          },
+          {
+            "name": "Simple Curls / Straightening",
+            "price": "Rs. 2,000"
+          },
+          {
+            "name": "Blow Dry",
+            "price": "Rs. 2,500"
+          },
+          {
+            "name": "Hair Extensions Application",
+            "price": "Rs. 2,000"
+          }
+        ],
+        "note": "",
+        "whatsappText": "Hi Laraib, I'd like to know more about Hairstyling."
+      },
+      {
+        "image": "images/jewellery-draping.jpg",
+        "imageAlt": "Bridal jewellery and dupatta setting by Laraib",
+        "title": "Jewellery & Draping",
+        "items": [
+          {
+            "name": "Jewellery Setting",
+            "price": "Rs. 1,000"
+          },
+          {
+            "name": "Dupatta Setting",
+            "price": "Rs. 500"
+          },
+          {
+            "name": "Hijab / Saree Setting",
+            "price": "Rs. 1,500"
+          },
+          {
+            "name": "Flower Setting",
+            "price": "Rs. 500"
+          },
+          {
+            "name": "Single Head Piece Setting",
+            "price": "Rs. 500"
+          }
+        ],
+        "note": "",
+        "whatsappText": "Hi Laraib, I'd like to know more about Jewellery & Draping."
+      },
+      {
+        "image": "images/facial.jpg",
+        "imageAlt": "Facial treatment by Laraib",
+        "title": "Facials",
+        "items": [
+          {
+            "name": "Janssen Whitening Facial",
+            "price": "Rs. 7,500"
+          },
+          {
+            "name": "Gold Facial",
+            "price": "Rs. 4,500"
+          },
+          {
+            "name": "Hydra Facial",
+            "price": "Rs. 8,000"
+          },
+          {
+            "name": "Herbal Facial",
+            "price": "Rs. 2,000"
+          },
+          {
+            "name": "Fruit Facial",
+            "price": "Rs. 2,000"
+          }
+        ],
+        "note": "",
+        "whatsappText": "Hi Laraib, I'd like to know more about Facials."
+      },
+      {
+        "image": "images/haircolor-treatment.jpg",
+        "imageAlt": "Hair colour and treatment by Laraib",
+        "title": "Hair Colour & Treatments",
+        "items": [
+          {
+            "name": "Keratin / Extenso / Rebonding",
+            "price": "Rs. 10,000"
+          },
+          {
+            "name": "One Tone Dye",
+            "price": "Rs. 4,500"
+          },
+          {
+            "name": "Grey Coverage",
+            "price": "Rs. 1,500"
+          },
+          {
+            "name": "Streaks / Balayage",
+            "price": "Rs. 11,000"
+          },
+          {
+            "name": "Hair Protein",
+            "price": "Rs. 2,000"
+          },
+          {
+            "name": "Luxury Hair Protein",
+            "price": "Rs. 3,500"
+          }
+        ],
+        "note": "Prices shown are for short/small-length hair — longer hair may cost more.",
+        "whatsappText": "Hi Laraib, I'd like to know more about Hair Colour & Treatments."
+      },
+      {
+        "image": "images/haircut.jpg",
+        "imageAlt": "Haircut by Laraib",
+        "title": "Haircuts",
+        "items": [
+          {
+            "name": "Signature Haircut",
+            "price": "Rs. 2,500"
+          },
+          {
+            "name": "Trimming (U-shape / Straight)",
+            "price": "Rs. 900"
+          },
+          {
+            "name": "Kids Haircut",
+            "price": "Rs. 900"
+          },
+          {
+            "name": "Front Bangs",
+            "price": "Rs. 500"
+          }
+        ],
+        "note": "",
+        "whatsappText": "Hi Laraib, I'd like to know more about Haircuts."
+      }
+    ]
+  },
+  "gallery": {
+    "eyebrow": "Portfolio",
+    "heading": "Our Brides",
+    "lead": "Every bride tells a unique story. Explore a curated collection of timeless bridal looks, crafted with elegance, artistry, and attention to every detail.",
+    "images": [
+      {
+        "src": "images/bridal-6.jpg",
+        "alt": "Bridal makeup with deep red outfit and emerald jewellery"
+      },
+      {
+        "src": "images/bridal-1.jpg",
+        "alt": "Bridal makeup look with gold jewellery and soft dupatta drape"
+      },
+      {
+        "src": "images/hero-image.jpg",
+        "alt": "Bride in gold bridal jewellery with warm glam makeup"
+      },
+      {
+        "src": "images/bridal-7.jpg",
+        "alt": "Bridal makeup with pastel outfit and floral backdrop"
+      },
+      {
+        "src": "images/bridal-3.jpg",
+        "alt": "Bridal makeup with green dupatta and bold eye makeup"
+      },
+      {
+        "src": "images/bridal-5.jpg",
+        "alt": "Bridal makeup with floral jewellery and mint outfit"
+      },
+      {
+        "src": "images/bridal.jpg",
+        "alt": "Bride peeking from under an embellished veil with soft glam makeup"
+      }
+    ]
+  },
+  "testimonials": {
+    "eyebrow": "Kind Words",
+    "heading": "What Our Brides Say",
+    "lead": "A few words from real celebrations we've had the honour of being part of.",
+    "items": [
+      {
+        "initials": "AK",
+        "quote": "I stopped worrying the moment Laraib started — every detail felt intentional, from the base to the final setting spray.",
+        "name": "Ayesha K.",
+        "role": "Bride"
+      },
+      {
+        "initials": "MR",
+        "quote": "My engagement makeup lasted through the entire evening, photos included. Exactly the soft-glam look I asked for.",
+        "name": "Mehak R.",
+        "role": "Bride-to-be"
+      },
+      {
+        "initials": "ST",
+        "quote": "Booked for my sister's mehndi and she looked stunning. Laraib really listens to what you want.",
+        "name": "Sana T.",
+        "role": "Sister of the Bride"
+      },
+      {
+        "initials": "HM",
+        "quote": "The trial session made all the difference — no surprises on the wedding day, just calm and confidence.",
+        "name": "Hira M.",
+        "role": "Bride"
+      },
+      {
+        "initials": "FA",
+        "quote": "Professional, punctual, and the jewellery setting was flawless. Worth every rupee.",
+        "name": "Fatima A.",
+        "role": "Bride"
+      },
+      {
+        "initials": "NS",
+        "quote": "Party makeup that photographed beautifully under every light. Already rebooked for my next event.",
+        "name": "Noor S.",
+        "role": "Client"
+      }
+    ]
+  },
+  "instagram": {
+    "eyebrow": "Follow Along",
+    "heading": "@makeup_by_laraib",
+    "lead": "Daily bridal inspiration and behind-the-scenes, on Instagram.",
+    "images": [
+      "images/bridal-1.jpg",
+      "images/bridal-6.jpg",
+      "images/bridal-3.jpg",
+      "images/bridal-7.jpg",
+      "images/bridal-5.jpg",
+      "images/bridal.jpg",
+      "images/hero-image.jpg"
+    ]
+  },
+  "footer": {
+    "tagline": "Bridal & glam makeup artistry in Peshawar, Pakistan — by appointment.",
+    "address": "Peshawar, Khyber Pakhtunkhwa, Pakistan",
+    "hours": "Monday – Saturday, 10:00 AM – 8:00 PM",
+    "appointmentNote": "By appointment only"
+  },
+  "contact": {
+    "whatsapp": "923315017157",
+    "phoneDisplay": "+92 331 5017157",
+    "instagramUrl": "https://www.instagram.com/makeup_by_laraib?igsh=bzMzdDVmcHY5aWNp"
+  },
+  "textStyles": {}
+}

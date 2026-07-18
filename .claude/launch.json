@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "oriel-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "laraib-static",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", ".", "-l", "5500"],
+      "port": 5500
+    },
+    {
+      "name": "laraib-admin",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["server.js"],
+      "port": 4000
+    }
+  ]
+}
