@@ -682,9 +682,14 @@ p { margin: 0; }
   width: max-content;
   animation: insta-scroll 34s linear infinite;
 }
-.insta-marquee:hover .insta-track,
-.insta-marquee:focus-within .insta-track {
-  animation-play-state: paused;
+/* Pause-on-hover only for actual mouse pointers — touch devices can get
+   "stuck" in a sticky :hover/:focus state after a tap (e.g. after tapping
+   an item to open Instagram and returning), which would otherwise freeze
+   the marquee permanently. */
+@media (hover: hover) and (pointer: fine) {
+  .insta-marquee:hover .insta-track {
+    animation-play-state: paused;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .insta-track { animation: none; }

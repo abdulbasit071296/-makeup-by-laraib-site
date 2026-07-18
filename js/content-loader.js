@@ -116,7 +116,7 @@
           '" target="_blank" rel="noopener noreferrer" class="insta-item">' +
           '<img src="' +
           escapeHtml(src) +
-          '" alt="" loading="lazy" />' +
+          '" alt="" />' +
           '<span class="insta-icon">' +
           INSTA_ICON +
           "</span></a>"

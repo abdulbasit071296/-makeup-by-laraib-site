@@ -75,6 +75,17 @@ function initSite() {
           heroVideo.play().catch(() => {});
         });
       }
+
+      // Some mobile browsers (data-saver / low-power modes) block autoplay
+      // outright, leaving the static poster + native play button visible.
+      // The first touch/scroll/click anywhere satisfies the browser's
+      // user-gesture requirement, so retry there as a safety net.
+      const resumeVideoOnInteraction = () => {
+        if (heroVideo.paused) heroVideo.play().catch(() => {});
+      };
+      ["touchstart", "scroll", "click"].forEach((evt) => {
+        document.addEventListener(evt, resumeVideoOnInteraction, { passive: true, once: true });
+      });
     }
   }
 
