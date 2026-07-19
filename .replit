@@ -1,9 +1,0 @@
-run = "node server.js"
-entrypoint = "server.js"
-
-[env]
-PORT = "8000"
-
-[[ports]]
-localPort = 8000
-externalPort = 80

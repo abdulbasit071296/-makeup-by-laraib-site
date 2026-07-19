@@ -3,7 +3,6 @@
   let activeTab = "header";
   let dirty = false;
 
-  const adminApp = document.getElementById("admin-app");
   const adminPanel = document.getElementById("admin-panel");
   const adminTabs = document.getElementById("admin-tabs");
   const saveStatus = document.getElementById("save-status");
