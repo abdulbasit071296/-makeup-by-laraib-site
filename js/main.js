@@ -63,6 +63,15 @@ function initSite() {
       }
 
       enterOneByOne(heroSequence);
+
+      // Absolute backstop: on a slow/janky device the per-element relay
+      // above can stall partway (confirmed happening — subtitle and the
+      // WhatsApp button staying invisible indefinitely), leaving content
+      // permanently hidden. Force everything visible after a fixed delay
+      // no matter what state the relay is in.
+      setTimeout(() => {
+        heroSequence.forEach((el) => el.classList.add("is-visible"));
+      }, 4000);
     }
 
     if (heroVideo) {

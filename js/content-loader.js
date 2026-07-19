@@ -136,8 +136,25 @@
     });
   }
 
-  fetch("content.json", { cache: "no-store" })
-    .then((r) => r.json())
+  // On a slow/flaky connection this fetch can fail or time out outright,
+  // which would otherwise leave services/gallery/instagram permanently
+  // empty with no recovery. Retry a few times with backoff before giving up.
+  function fetchContentWithRetry(attempt) {
+    return fetch("content.json", { cache: "no-store" })
+      .then((r) => {
+        if (!r.ok) throw new Error("bad status " + r.status);
+        return r.json();
+      })
+      .catch((err) => {
+        if (attempt >= 4) throw err;
+        const delay = 600 * attempt; // 600ms, 1200ms, 1800ms
+        return new Promise((resolve) => setTimeout(resolve, delay)).then(() =>
+          fetchContentWithRetry(attempt + 1)
+        );
+      });
+  }
+
+  fetchContentWithRetry(1)
     .catch(() => null)
     .then((content) => {
       if (content) {
