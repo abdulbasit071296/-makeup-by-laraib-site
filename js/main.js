@@ -396,6 +396,30 @@ function initSite() {
       clone.setAttribute("tabindex", "-1");
       instaTrack.appendChild(clone);
     });
+
+    // Safari can fail to actually start a CSS animation on an element
+    // that's off-screen at load, leaving it stuck on frame one until some
+    // later scroll-triggered repaint "wakes" it up (confirmed happening —
+    // it started working only after scrolling up and down). Force a
+    // restart by toggling the animation off and back on once the section
+    // is actually visible, rather than trusting it started on its own.
+    if ("IntersectionObserver" in window) {
+      const instaMarquee = document.querySelector(".insta-marquee");
+      const restartAnimation = () => {
+        instaTrack.style.animation = "none";
+        void instaTrack.offsetWidth; // force reflow
+        instaTrack.style.animation = "";
+      };
+      const instaObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) restartAnimation();
+          });
+        },
+        { threshold: 0.1 }
+      );
+      instaObserver.observe(instaMarquee || instaTrack);
+    }
   }
 
   /* ---------- Scroll reveal ---------- */
