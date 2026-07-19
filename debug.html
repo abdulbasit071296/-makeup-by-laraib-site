@@ -9,23 +9,27 @@
     .bad { color: #f55; font-weight: bold; }
     .ok { color: #5f5; }
     h2 { color: #ff0; font-size: 14px; margin: 16px 0 4px; }
+    iframe { width: 375px; height: 700px; border: 2px solid #0f0; }
   </style>
 </head>
 <body>
   <h2>Basics</h2>
   <div id="basics">loading...</div>
 
-  <h2>Hero Video</h2>
+  <h2>Real Page: Hero Video</h2>
   <div id="video-info">loading...</div>
 
-  <h2>Instagram Track</h2>
+  <h2>Real Page: Instagram Track</h2>
   <div id="insta-info">loading...</div>
 
-  <h2>JS Errors Caught</h2>
+  <h2>Real Page: Gallery Track</h2>
+  <div id="gallery-info">loading...</div>
+
+  <h2>JS Errors Caught (this page)</h2>
   <div id="errors">none yet</div>
 
-  <h2>Live Video Tag (for comparison)</h2>
-  <video id="test-video" src="images/hero-video-3.mp4" autoplay muted loop playsinline style="width:100%;max-width:300px;border:2px solid #0f0;"></video>
+  <h2>Live iframe of the real index.html (scroll it to Instagram)</h2>
+  <iframe id="real-page" src="index.html"></iframe>
 
   <script>
     var errorLog = [];
@@ -47,38 +51,89 @@
       time: new Date().toString()
     });
 
-    var v = document.getElementById("test-video");
+    var frame = document.getElementById("real-page");
     var videoDiv = document.getElementById("video-info");
-    var lastTime = -1;
-    var stuckCount = 0;
-    setInterval(function() {
-      var info = {
-        currentTime: v.currentTime.toFixed(2),
-        paused: v.paused,
-        readyState: v.readyState + " (4=enough data)",
-        networkState: v.networkState + " (1=idle, 2=loading, 3=no source)",
-        error: v.error ? (v.error.code + ": " + v.error.message) : "none",
-        videoWidth: v.videoWidth,
-        videoHeight: v.videoHeight
-      };
-      if (v.currentTime === lastTime) {
-        stuckCount++;
-      } else {
-        stuckCount = 0;
-      }
-      lastTime = v.currentTime;
-      info.stuckChecks = stuckCount + " (if this climbs past 3-4, it is genuinely frozen)";
-      videoDiv.textContent = fmt(info);
-      videoDiv.className = stuckCount > 3 ? "bad" : "ok";
-    }, 500);
+    var instaDiv = document.getElementById("insta-info");
+    var galleryDiv = document.getElementById("gallery-info");
+    var lastVideoTime = -1, stuckCount = 0;
 
-    setTimeout(function() {
-      var track = document.createElement("div");
-      // Recreate insta-track conditions minimally isn't practical here;
-      // instead just report if the real site's track exists when this
-      // page is compared manually. Kept simple on purpose.
-    }, 0);
-    document.getElementById("insta-info").textContent = "Open /index.html separately to check the Instagram section visually — this page focuses on the video since that's testable in isolation.";
+    function poll() {
+      var doc;
+      try {
+        doc = frame.contentDocument;
+      } catch (e) {
+        videoDiv.textContent = "Cannot access iframe: " + e.message;
+        return;
+      }
+      if (!doc || !doc.body) {
+        videoDiv.textContent = "iframe not loaded yet";
+        instaDiv.textContent = "iframe not loaded yet";
+        galleryDiv.textContent = "iframe not loaded yet";
+        return;
+      }
+
+      var v = doc.querySelector(".hero-visual-video");
+      if (v) {
+        var vinfo = {
+          currentTime: v.currentTime.toFixed(2),
+          paused: v.paused,
+          readyState: v.readyState,
+          networkState: v.networkState,
+          error: v.error ? (v.error.code + ": " + v.error.message) : "none"
+        };
+        if (v.currentTime === lastVideoTime) stuckCount++; else stuckCount = 0;
+        lastVideoTime = v.currentTime;
+        vinfo.stuckChecks = stuckCount;
+        videoDiv.textContent = fmt(vinfo);
+        videoDiv.className = stuckCount > 3 ? "bad" : "ok";
+      } else {
+        videoDiv.textContent = "video element not found in iframe";
+      }
+
+      var track = doc.getElementById("insta-track");
+      if (track) {
+        var cs = doc.defaultView.getComputedStyle(track);
+        var items = track.children;
+        var imgsLoaded = 0, imgsTotal = 0;
+        for (var i = 0; i < items.length; i++) {
+          var img = items[i].querySelector("img");
+          if (img) {
+            imgsTotal++;
+            if (img.complete && img.naturalWidth > 0) imgsLoaded++;
+          }
+        }
+        var firstRect = items[0] ? items[0].getBoundingClientRect() : null;
+        instaDiv.textContent = fmt({
+          childCount: items.length,
+          imagesLoaded: imgsLoaded + " / " + imgsTotal,
+          trackWidth: track.offsetWidth,
+          trackHeight: track.offsetHeight,
+          animationName: cs.animationName,
+          animationPlayState: cs.animationPlayState,
+          opacity: cs.opacity,
+          display: cs.display,
+          visibility: cs.visibility,
+          transform: cs.transform,
+          firstItemRect: firstRect ? (firstRect.width + "x" + firstRect.height + " at " + firstRect.x.toFixed(0) + "," + firstRect.y.toFixed(0)) : "n/a"
+        });
+      } else {
+        instaDiv.textContent = "insta-track element not found in iframe";
+      }
+
+      var gTrack = doc.getElementById("gallery-track");
+      if (gTrack) {
+        galleryDiv.textContent = fmt({
+          childCount: gTrack.children.length,
+          trackWidth: gTrack.offsetWidth
+        });
+      } else {
+        galleryDiv.textContent = "gallery-track element not found in iframe";
+      }
+    }
+
+    frame.addEventListener("load", function() {
+      setInterval(poll, 500);
+    });
   </script>
 </body>
 </html>
