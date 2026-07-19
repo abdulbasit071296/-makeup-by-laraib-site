@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Debug</title>
+  <style>
+    body { font-family: monospace; font-size: 13px; padding: 12px; background: #111; color: #0f0; white-space: pre-wrap; word-break: break-word; }
+    .bad { color: #f55; font-weight: bold; }
+    .ok { color: #5f5; }
+    h2 { color: #ff0; font-size: 14px; margin: 16px 0 4px; }
+  </style>
+</head>
+<body>
+  <h2>Basics</h2>
+  <div id="basics">loading...</div>
+
+  <h2>Hero Video</h2>
+  <div id="video-info">loading...</div>
+
+  <h2>Instagram Track</h2>
+  <div id="insta-info">loading...</div>
+
+  <h2>JS Errors Caught</h2>
+  <div id="errors">none yet</div>
+
+  <h2>Live Video Tag (for comparison)</h2>
+  <video id="test-video" src="images/hero-video-3.mp4" autoplay muted loop playsinline style="width:100%;max-width:300px;border:2px solid #0f0;"></video>
+
+  <script>
+    var errorLog = [];
+    window.onerror = function(msg, url, line, col, err) {
+      errorLog.push(msg + " (line " + line + ")");
+      document.getElementById("errors").textContent = errorLog.join("\n");
+      document.getElementById("errors").className = "bad";
+    };
+
+    function fmt(obj) {
+      return Object.keys(obj).map(function(k) { return k + ": " + obj[k]; }).join("\n");
+    }
+
+    document.getElementById("basics").textContent = fmt({
+      userAgent: navigator.userAgent,
+      screenSize: screen.width + "x" + screen.height,
+      viewportSize: window.innerWidth + "x" + window.innerHeight,
+      devicePixelRatio: window.devicePixelRatio,
+      time: new Date().toString()
+    });
+
+    var v = document.getElementById("test-video");
+    var videoDiv = document.getElementById("video-info");
+    var lastTime = -1;
+    var stuckCount = 0;
+    setInterval(function() {
+      var info = {
+        currentTime: v.currentTime.toFixed(2),
+        paused: v.paused,
+        readyState: v.readyState + " (4=enough data)",
+        networkState: v.networkState + " (1=idle, 2=loading, 3=no source)",
+        error: v.error ? (v.error.code + ": " + v.error.message) : "none",
+        videoWidth: v.videoWidth,
+        videoHeight: v.videoHeight
+      };
+      if (v.currentTime === lastTime) {
+        stuckCount++;
+      } else {
+        stuckCount = 0;
+      }
+      lastTime = v.currentTime;
+      info.stuckChecks = stuckCount + " (if this climbs past 3-4, it is genuinely frozen)";
+      videoDiv.textContent = fmt(info);
+      videoDiv.className = stuckCount > 3 ? "bad" : "ok";
+    }, 500);
+
+    setTimeout(function() {
+      var track = document.createElement("div");
+      // Recreate insta-track conditions minimally isn't practical here;
+      // instead just report if the real site's track exists when this
+      // page is compared manually. Kept simple on purpose.
+    }, 0);
+    document.getElementById("insta-info").textContent = "Open /index.html separately to check the Instagram section visually — this page focuses on the video since that's testable in isolation.";
+  </script>
+</body>
+</html>
