@@ -412,17 +412,26 @@ function initSite() {
 
 /* content-loader.js renders the dynamic sections (services, gallery,
    instagram, testimonial data) from content.json before this can safely
-   read them, so wait for both the DOM and that render pass. */
-let domReady = false;
-let contentReady = false;
+   read them, so wait for both the DOM and that render pass. Both
+   conditions are also checked immediately (not just listened for) since
+   content.json can resolve fast enough that "content:ready" fires before
+   this script finishes registering its listener — a plain addEventListener
+   would then wait forever for an event that already happened. */
+let domReady = document.readyState !== "loading";
+let contentReady = !!window.SITE_CONTENT;
 function tryInitSite() {
   if (domReady && contentReady) initSite();
 }
-document.addEventListener("DOMContentLoaded", () => {
-  domReady = true;
-  tryInitSite();
-});
-document.addEventListener("content:ready", () => {
-  contentReady = true;
-  tryInitSite();
-});
+if (!domReady) {
+  document.addEventListener("DOMContentLoaded", () => {
+    domReady = true;
+    tryInitSite();
+  });
+}
+if (!contentReady) {
+  document.addEventListener("content:ready", () => {
+    contentReady = true;
+    tryInitSite();
+  });
+}
+tryInitSite();
