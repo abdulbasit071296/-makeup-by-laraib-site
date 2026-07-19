@@ -34,8 +34,17 @@
     document.querySelectorAll("[data-key-img]").forEach((el) => {
       const val = getByPath(content, el.getAttribute("data-key-img"));
       if (!val) return;
-      if (el.tagName === "IMG" || el.tagName === "VIDEO") el.src = val;
-      else el.style.backgroundImage = "url('" + val + "')";
+      if (el.tagName === "IMG" || el.tagName === "VIDEO") {
+        // Reassigning .src to the same value it already has still makes
+        // the browser treat it as a fresh media load. For <video> this
+        // resets playback and can silently cancel autoplay eligibility
+        // that was already granted at initial parse time (confirmed
+        // contributing to the hero video never autoplaying on iOS
+        // Safari) — so only touch it when the value has actually changed.
+        if (el.getAttribute("src") !== val) el.src = val;
+      } else {
+        el.style.backgroundImage = "url('" + val + "')";
+      }
     });
   }
 
