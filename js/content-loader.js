@@ -97,21 +97,71 @@
       .join("");
   }
 
-  function renderGallery(gallery) {
-    const track = document.getElementById("gallery-track");
-    if (!track || !Array.isArray(gallery.images)) return;
-    track.innerHTML = gallery.images
-      .map(
-        (img) =>
-          '<li class="slide" data-full="' +
-          escapeHtml(img.src) +
-          '"><button type="button" class="slide-btn"><img src="' +
-          escapeHtml(img.src) +
-          '" alt="' +
-          escapeHtml(img.alt || "") +
-          '" loading="lazy" /></button></li>'
-      )
-      .join("");
+  const VIDEO_EXTENSIONS = [".mp4", ".webm", ".mov"];
+  function isVideoSrc(src) {
+    const lower = src.toLowerCase();
+    return VIDEO_EXTENSIONS.some((ext) => lower.endsWith(ext));
+  }
+
+  /* Our Brides gallery: left track steps down through 3 uniform cards.
+     Right track holds row A (cards 4, 5) and row B (cards 6-9) stacked
+     as ONE continuous strip, repeated twice (A, B, A, B). Both rows are
+     always fully visible at once — a step slides the strip up so
+     whichever row is on top scrolls out while the other moves into its
+     place, and the row that scrolled out reappears at the bottom (via
+     the repeated copy). Six cards stay visible throughout; only their
+     top/bottom order swaps. Only 7 real photos exist right now for 9
+     card slots, so slots beyond that cycle back via modulo — harmless,
+     and stops mattering once more photos/videos are added later. */
+  function renderGalleryBento2(gallery) {
+    const leftTrack = document.getElementById("bento2-left-track");
+    const rightTrack = document.getElementById("bento2-right-track");
+    if (!leftTrack || !rightTrack || !Array.isArray(gallery.images) || gallery.images.length === 0) return;
+
+    const imgs = gallery.images;
+    const pick = (i) => imgs[i % imgs.length];
+
+    function cardHtml(img, cls) {
+      const isVid = isVideoSrc(img.src);
+      const inner = isVid
+        ? '<video src="' + escapeHtml(img.src) + '" autoplay muted loop playsinline></video>'
+        : '<img src="' + escapeHtml(img.src) + '" alt="' + escapeHtml(img.alt || "") + '" loading="lazy" />';
+      return (
+        '<button type="button" class="' +
+        cls +
+        '" data-full="' +
+        escapeHtml(img.src) +
+        '" data-media="' +
+        (isVid ? "video" : "image") +
+        '">' +
+        inner +
+        "</button>"
+      );
+    }
+
+    function cellHtml(img, cellNumClass) {
+      return '<div class="bento2-cell ' + cellNumClass + '">' + cardHtml(img, "bento2-cell-media") + "</div>";
+    }
+
+    // Left body: tripled so the existing downward-step animation always
+    // has a same-content copy ahead/behind to land on.
+    const leftCardsOnce = [pick(0), pick(1), pick(2)].map((img) => cardHtml(img, "bento2-card")).join("");
+    leftTrack.innerHTML = leftCardsOnce + leftCardsOnce + leftCardsOnce;
+
+    const rowA =
+      '<div class="bento2-row-a">' + cellHtml(pick(3), "bento2-cell-4") + cellHtml(pick(4), "bento2-cell-5") + "</div>";
+    const rowB =
+      '<div class="bento2-row-b">' +
+      '<div class="bento2-col-left">' +
+      cellHtml(pick(5), "bento2-cell-6") +
+      cellHtml(pick(7), "bento2-cell-8") +
+      "</div>" +
+      '<div class="bento2-col-right">' +
+      cellHtml(pick(6), "bento2-cell-7") +
+      cellHtml(pick(8), "bento2-cell-9") +
+      "</div>" +
+      "</div>";
+    rightTrack.innerHTML = rowA + rowB + rowA + rowB;
   }
 
   function renderInstagram(instagram, instagramUrl) {
@@ -170,7 +220,7 @@
         window.SITE_CONTENT = content;
         applyText(content);
         renderServices(content.services || {});
-        renderGallery(content.gallery || {});
+        renderGalleryBento2(content.gallery || {});
         renderInstagram(content.instagram || {}, (content.contact || {}).instagramUrl || "#");
         applyContactLinks(content.contact || {});
         applyTextStyles(content);

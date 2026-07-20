@@ -209,13 +209,13 @@ function initSite() {
     lightboxImg.src = "";
   }
 
-  const galleryTrack = document.getElementById("gallery-track");
-  if (galleryTrack) {
-    galleryTrack.addEventListener("click", (e) => {
-      const slide = e.target.closest(".slide");
-      if (!slide) return;
-      const full = slide.getAttribute("data-full");
-      const img = slide.querySelector("img");
+  const galleryBento2 = document.getElementById("gallery-bento2");
+  if (galleryBento2) {
+    galleryBento2.addEventListener("click", (e) => {
+      const tile = e.target.closest(".bento2-card, .bento2-cell-media");
+      if (!tile || tile.getAttribute("data-media") === "video") return;
+      const full = tile.getAttribute("data-full");
+      const img = tile.querySelector("img");
       openLightbox(full, img ? img.alt : "");
     });
   }
@@ -233,158 +233,160 @@ function initSite() {
     closeLightbox();
   });
 
-  /* ---------- Gallery slider: infinite coverflow loop ----------
-     The real slide set is tripled (copy A / B / C). currentIdx is a
-     single authoritative counter — every button click or autoplay
-     tick moves it by exactly 1, independent of whether the browser's
-     scroll animation has visually caught up yet. Re-deriving "where
-     are we" from scroll geometry on every step (the previous approach)
-     could read a stale/in-flight position and silently compute the
-     same target twice in a row, which is what made the carousel
-     appear to get stuck after hovering or revisiting the section.
-     Geometry is only consulted afterwards, to follow manual drag/swipe. */
-  function initSlider(rootId, trackId, autoplayMs) {
-    const root = document.getElementById(rootId);
-    const track = document.getElementById(trackId);
-    if (!root || !track) return;
+  /* ---------- Bento gallery: step sequencer ----------
+     One combined loop. Left column (3 uniform cards, card 2 slightly
+     larger) takes 3 downward steps, same as before. Right side is ONE
+     continuous strip — row A (cards 4, 5) then row B (cards 6-9),
+     repeated twice (A, B, A, B) — and always shows one full A+B pair
+     at once. A step slides the strip up by whichever row is currently
+     on top, so that row scrolls out while the other row moves up into
+     its place, and the row that scrolled out reappears at the bottom
+     from the repeated copy. Six cards stay visible throughout; only
+     their top/bottom order swaps. Two such steps (A out/B in, then B
+     out/A in) return the strip to its starting look, at which point
+     position resets silently and the cycle repeats. */
+  function initBentoStepper() {
+    const leftBody = document.querySelector(".bento2-left");
+    const leftTrack = document.getElementById("bento2-left-track");
+    const rightBody = document.querySelector(".bento2-right");
+    const rightTrack = document.getElementById("bento2-right-track");
+    if (!leftBody || !leftTrack || !rightBody || !rightTrack) return;
+    if (leftTrack.children.length === 0 || rightTrack.children.length === 0) return;
 
-    const originals = Array.from(track.children);
-    const realCount = originals.length;
-    if (realCount === 0) return;
+    const EASE = "cubic-bezier(.65,0,.35,1)";
+    const LEFT_STEP_MS = 1050;
+    const RIGHT_STEP_MS = 800;
+    const SETTLE_MS = 250;
+    const LONG_PAUSE_MS = 1600; // pause between row A's step and row B's step
+    const GAP = 10; // matches the 0.625rem gap in CSS
 
-    originals.forEach((node) => track.appendChild(node.cloneNode(true)));
-    originals.forEach((node) => track.appendChild(node.cloneNode(true)));
-
-    const slides = Array.from(track.children);
-    const prevBtn = root.querySelector(".slider-arrow-prev");
-    const nextBtn = root.querySelector(".slider-arrow-next");
-
-    let currentIdx = realCount;
-
-    function slideTarget(i) {
-      const clamped = Math.max(0, Math.min(slides.length - 1, i));
-      const slide = slides[clamped];
-      const trackRect = track.getBoundingClientRect();
-      const slideRect = slide.getBoundingClientRect();
-      return track.scrollLeft + (slideRect.left - trackRect.left) - (trackRect.width - slideRect.width) / 2;
+    if (prefersReduced) {
+      // Respect reduced-motion here (unlike the Instagram marquee) since
+      // this is a much larger, more insistent full-body motion, not a
+      // small background strip.
+      return;
     }
 
-    function scrollToIndex(i, instant) {
-      track.scrollTo({ left: slideTarget(i), behavior: instant || prefersReduced ? "auto" : "smooth" });
+    let cancelled = false;
+    let leftCardH = 0;
+    let rowAH = 0;
+    let rowBH = 0;
+
+    function measure() {
+      // Cards have no CSS height of their own — the images inside rely
+      // on height:100% of their card, so without an explicit pixel
+      // height set here that's a circular reference that resolves to
+      // ~0. Compute a real, FIXED height once from each container and
+      // apply it directly — never recomputed mid-animation, only on
+      // load/resize, so the layout never shifts while stepping.
+      const leftCards = leftTrack.querySelectorAll(".bento2-card");
+      leftCardH = (leftBody.clientHeight - GAP * 2) / 3;
+      leftCards.forEach((c) => (c.style.height = leftCardH + "px"));
+
+      // Row A : Row B keeps the same 1:2 share of the right body's
+      // total height that the old static layout used, minus the one
+      // gap that sits between them when both are visible together.
+      const rightContentH = rightBody.clientHeight - GAP;
+      rowAH = rightContentH / 3;
+      rowBH = rightContentH - rowAH;
+      rightTrack.querySelectorAll(":scope > .bento2-row-a").forEach((r) => (r.style.height = rowAH + "px"));
+      rightTrack.querySelectorAll(":scope > .bento2-row-b").forEach((r) => (r.style.height = rowBH + "px"));
+    }
+    measure();
+    window.addEventListener("resize", measure);
+
+    function setTransform(el, y, transitionMs) {
+      el.style.transition = transitionMs ? `transform ${transitionMs}ms ${EASE}` : "none";
+      el.style.transform = `translateY(${y}px)`;
     }
 
-    function nearestIndex() {
-      const trackRect = track.getBoundingClientRect();
-      const center = trackRect.left + trackRect.width / 2;
-      let closest = 0;
-      let closestDist = Infinity;
-      slides.forEach((slide, i) => {
-        const rect = slide.getBoundingClientRect();
-        const dist = Math.abs((rect.left + rect.width / 2) - center);
-        if (dist < closestDist) {
-          closestDist = dist;
-          closest = i;
-        }
-      });
-      return closest;
+    const leftSlot = () => leftCardH + GAP;
+
+    // Start on the middle copy of the tripled track so there's always a
+    // same-content copy both ahead and behind to land on.
+    setTransform(leftTrack, -leftSlot() * 3, 0);
+    let leftPos = -leftSlot() * 3;
+    setTransform(rightTrack, 0, 0);
+    let rightPos = 0;
+
+    function wait(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    function setActive(i) {
-      slides.forEach((slide, idx) => slide.classList.toggle("is-active", idx === i));
-    }
-
-    /* Moves to index i (normalizing back into the safe middle copy
-       first if needed) and updates the one authoritative counter. */
-    function goTo(i, instant) {
-      let target = i;
-      if (target < realCount) target += realCount;
-      else if (target >= realCount * 2) target -= realCount;
-      currentIdx = target;
-      scrollToIndex(target, instant);
-      setActive(target);
-    }
-
-    function step(delta) {
-      goTo(currentIdx + delta);
-    }
-
-    /* Follows manual drag/swipe: once native scrolling settles, resync
-       the authoritative counter from the actual visual position. */
-    let settleTimer = null;
-    track.addEventListener("scroll", () => {
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(() => {
-        const nearest = nearestIndex();
-        if (nearest < realCount || nearest >= realCount * 2) {
-          goTo(nearest, true);
-        } else {
-          currentIdx = nearest;
-          setActive(nearest);
-        }
-      }, 120);
-    }, { passive: true });
-
-    goTo(realCount, true);
-
-    /* Autoplay: stop() always clears any existing timer before start()
-       creates a new one, so overlapping pointer/focus/touch events can
-       never leak duplicate intervals. */
-    let timer = null;
-    const stopAutoplay = () => {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
+    async function runLeft() {
+      for (let i = 0; i < 3; i++) {
+        if (cancelled) return;
+        leftPos += leftSlot();
+        setTransform(leftTrack, leftPos, LEFT_STEP_MS);
+        await wait(LEFT_STEP_MS + SETTLE_MS);
       }
-    };
-    const startAutoplay = () => {
-      if (prefersReduced || !autoplayMs) return;
-      stopAutoplay();
-      timer = setInterval(() => step(1), autoplayMs);
-    };
+      // Landed back on the identical middle-copy position — reset
+      // silently (no transition) so the count never grows unbounded.
+      leftPos = -leftSlot() * 3;
+      setTransform(leftTrack, leftPos, 0);
+    }
 
-    prevBtn.addEventListener("click", () => {
-      step(-1);
-      startAutoplay();
-    });
-    nextBtn.addEventListener("click", () => {
-      step(1);
-      startAutoplay();
-    });
+    async function runRight() {
+      // Step 1: row A (currently on top) scrolls up and out; row B
+      // moves up to take its place.
+      if (cancelled) return;
+      rightPos -= rowAH + GAP;
+      setTransform(rightTrack, rightPos, RIGHT_STEP_MS);
+      await wait(RIGHT_STEP_MS + SETTLE_MS);
+      if (cancelled) return;
+      await wait(LONG_PAUSE_MS);
 
-    startAutoplay();
-    /* Pause/resume is tied to the image track itself, not the whole
-       .coverflow wrapper — that wrapper also contains the arrow
-       buttons and its own bottom padding, so its box is much taller
-       than the pictures. Hanging the listener there meant the cursor
-       had to clear all of that extra space (not just leave a picture)
-       before pointerleave ever fired, so autoplay could stay paused
-       long after the user had visually moved on. */
-    track.addEventListener("pointerenter", stopAutoplay);
-    track.addEventListener("pointerleave", startAutoplay);
-    root.addEventListener("focusin", stopAutoplay);
-    root.addEventListener("focusout", startAutoplay);
-    track.addEventListener("touchstart", stopAutoplay, { passive: true });
-    track.addEventListener("touchend", startAutoplay, { passive: true });
-    track.addEventListener("touchcancel", startAutoplay, { passive: true });
+      // Step 2: row B (now on top) scrolls up and out; the repeated
+      // copy of row A moves up to take its place — visually identical
+      // to where the strip started.
+      if (cancelled) return;
+      rightPos -= rowBH + GAP;
+      setTransform(rightTrack, rightPos, RIGHT_STEP_MS);
+      await wait(RIGHT_STEP_MS + SETTLE_MS);
 
-    /* Self-heal on return: if the section scrolls back into view after
-       being off-screen, re-assert the current position and make sure
-       autoplay is actually running rather than trusting whatever state
-       it was left in. */
+      // Reset silently (no transition) back to the start position so
+      // the offset never grows unbounded.
+      rightPos = 0;
+      setTransform(rightTrack, rightPos, 0);
+    }
+
+    // Left finishes -> right starts immediately -> right finishes ->
+    // left starts immediately. The only deliberate pause is the one
+    // inside runRight, between its two steps.
+    async function loop() {
+      while (!cancelled) {
+        await runLeft();
+        if (cancelled) return;
+
+        await runRight();
+        if (cancelled) return;
+      }
+    }
+
+    const gallery = document.getElementById("gallery-bento2");
+
+    // Self-heal on return, same reasoning as the old gallery carousel:
+    // don't trust whatever state a background tab left this in.
     if ("IntersectionObserver" in window) {
-      const visibilityObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            goTo(currentIdx, true);
-            startAutoplay();
-          }
-        });
-      }, { threshold: 0.3 });
-      visibilityObserver.observe(root);
+      let running = false;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !running) {
+              running = true;
+              loop();
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+      observer.observe(gallery);
+    } else {
+      loop();
     }
   }
 
-  initSlider("gallery-slider", "gallery-track", 1500);
+  initBentoStepper();
 
   /* ---------- Instagram marquee: duplicate for seamless loop ---------- */
   const instaTrack = document.getElementById("insta-track");
