@@ -14,7 +14,7 @@
   },
   "hero": {
     "eyebrow": "Welcome to",
-    "title": "Makeup by <em>Laraib</em>",
+    "title": "Makeup by <em class=\"shimmer-text\">Laraib</em>",
     "subtitle": "Luxury makeup artistry for brides and every special occasion. Creating timeless, elegant looks that enhance your natural beauty. Based in Peshawar, by appointment.",
     "bgImage": "images/hero-video-poster.jpg",
     "video": "images/hero-video-3.mp4"
@@ -208,40 +208,19 @@
       }
     ]
   },
-  "gallery": {
-    "eyebrow": "Portfolio",
-    "heading": "Our Brides",
-    "lead": "Every bride tells a unique story. Explore a curated collection of timeless bridal looks, crafted with elegance, artistry, and attention to every detail.",
-    "images": [
-      {
-        "src": "images/bridal-6.jpg",
-        "alt": "Bridal makeup with deep red outfit and emerald jewellery"
-      },
-      {
-        "src": "images/bridal-1.jpg",
-        "alt": "Bridal makeup look with gold jewellery and soft dupatta drape"
-      },
-      {
-        "src": "images/hero-image.jpg",
-        "alt": "Bride in gold bridal jewellery with warm glam makeup"
-      },
-      {
-        "src": "images/bridal-7.jpg",
-        "alt": "Bridal makeup with pastel outfit and floral backdrop"
-      },
-      {
-        "src": "images/bridal-3.jpg",
-        "alt": "Bridal makeup with green dupatta and bold eye makeup"
-      },
-      {
-        "src": "images/bridal-5.jpg",
-        "alt": "Bridal makeup with floral jewellery and mint outfit"
-      },
-      {
-        "src": "images/bridal.jpg",
-        "alt": "Bride peeking from under an embellished veil with soft glam makeup"
-      }
-    ]
+  "hairCare": {
+    "eyebrow": "Hair Care",
+    "headingLight": "Nourished and strong",
+    "headingBold": "from root to tip.",
+    "lead": "Laraib's Hair Food is a rich, nourishing hair oil treatment — deeply conditioning strands, strengthening roots, and restoring natural shine with every wash.",
+    "cta": "Order on WhatsApp",
+    "whatsappText": "Hi Laraib, I'd like to order the Hair Food treatment.",
+    "detail1Label": "Formula",
+    "detail1Text": "Nourishing hair oil blend in a 500ml pump bottle.",
+    "detail2Label": "Best For",
+    "detail2Text": "Dry, damaged & colour-treated hair.",
+    "productVideo": "images/hair-product-video.mp4",
+    "productVideoLabel": "Laraib's Hair Food nourishing hair oil"
   },
   "testimonials": {
     "eyebrow": "Kind Words",

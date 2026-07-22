@@ -17,7 +17,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -26,35 +26,43 @@
   <a href="#main" class="skip-link">Skip to content</a>
 
   <!-- ===== Floating Social Buttons ===== -->
+  <!-- Adapted from a Uiverse.io glassmorphism dock component (by MijailVillegas) -->
   <div class="social-float-stack">
-    <a
-      href="https://www.instagram.com/makeup_by_laraib?igsh=bzMzdDVmcHY5aWNp"
-      class="social-float instagram-float"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Follow Makeup by Laraib on Instagram"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="2" y="2" width="20" height="20" rx="6"/>
-        <circle cx="12" cy="12" r="4.5"/>
-        <circle cx="17.8" cy="6.2" r="1.1" fill="currentColor" stroke="none"/>
-      </svg>
-      <span class="sr-only">Follow on Instagram</span>
-    </a>
-
-    <a
-      href="https://wa.me/923315017157?text=Hi%20Laraib%2C%20I%27d%20like%20to%20book%20a%20makeup%20appointment"
-      class="social-float whatsapp-float"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Chat with Makeup by Laraib on WhatsApp"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-        <path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.986.586 3.833 1.594 5.386L2 22l4.735-1.564A9.953 9.953 0 0 0 12.001 22C17.523 22 22 17.523 22 12S17.523 2 12.001 2zm0 18.153a8.13 8.13 0 0 1-4.146-1.14l-.297-.176-3.05 1.008.996-2.973-.194-.306a8.14 8.14 0 0 1-1.256-4.36c0-4.507 3.667-8.173 8.174-8.173 2.184 0 4.238.85 5.783 2.394a8.12 8.12 0 0 1 2.393 5.784c0 4.507-3.667 8.173-8.174 8.173l-.229.769z"/>
-      </svg>
-      <span class="sr-only">Chat on WhatsApp</span>
-    </a>
+    <ul class="social-card">
+      <li class="social-item social-item--whatsapp">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <a
+          href="https://wa.me/923315017157?text=Hi%20Laraib%2C%20I%27d%20like%20to%20book%20a%20makeup%20appointment"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with Makeup by Laraib on WhatsApp"
+        >
+          <svg class="social-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12.001 2C6.478 2 2 6.477 2 12c0 1.986.586 3.833 1.594 5.386L2 22l4.735-1.564A9.953 9.953 0 0 0 12.001 22C17.523 22 22 17.523 22 12S17.523 2 12.001 2zm0 18.153a8.13 8.13 0 0 1-4.146-1.14l-.297-.176-3.05 1.008.996-2.973-.194-.306a8.14 8.14 0 0 1-1.256-4.36c0-4.507 3.667-8.173 8.174-8.173 2.184 0 4.238.85 5.783 2.394a8.12 8.12 0 0 1 2.393 5.784c0 4.507-3.667 8.173-8.174 8.173l-.229.769z"/>
+          </svg>
+        </a>
+        <div class="social-tooltip">WhatsApp</div>
+      </li>
+      <li class="social-item social-item--instagram">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <a
+          href="https://www.instagram.com/makeup_by_laraib?igsh=bzMzdDVmcHY5aWNp"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Follow Makeup by Laraib on Instagram"
+        >
+          <svg class="social-svg" viewBox="0 0 448 512" aria-hidden="true" focusable="false">
+            <path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
+          </svg>
+        </a>
+        <div class="social-tooltip">Instagram</div>
+      </li>
+    </ul>
   </div>
 
   <!-- ===== Header ===== -->
@@ -67,8 +75,8 @@
 
       <nav class="nav-desktop" aria-label="Primary">
         <a href="#home" data-key="header.navHome">Home</a>
-        <a href="#services" data-key="header.navServices">Services</a>
         <a href="#gallery" data-key="header.navGallery">Our Brides</a>
+        <a href="#services" data-key="header.navServices">Services</a>
         <a href="#testimonials" data-key="header.navTestimonials">Testimonials</a>
         <a href="#contact" data-key="header.navContact">Contact</a>
       </nav>
@@ -85,8 +93,8 @@
     <div class="mobile-menu" id="mobile-menu">
       <nav aria-label="Mobile">
         <a href="#home" data-key="header.navHome">Home</a>
-        <a href="#services" data-key="header.navServices">Services</a>
         <a href="#gallery" data-key="header.navGallery">Our Brides</a>
+        <a href="#services" data-key="header.navServices">Services</a>
         <a href="#testimonials" data-key="header.navTestimonials">Testimonials</a>
         <a href="#contact" data-key="header.navContact">Contact</a>
         <a href="https://wa.me/923315017157?text=Hi%20Laraib%2C%20I%27d%20like%20to%20book%20a%20makeup%20appointment" class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-key="common.bookWhatsAppText">Book on WhatsApp</a>
@@ -98,9 +106,6 @@
 
     <!-- ===== Hero ===== -->
     <section class="hero" id="home">
-      <div class="hero-bg" style="background-image:url('images/hero-video-poster.jpg')" aria-hidden="true" data-key-img="hero.bgImage"></div>
-      <div class="hero-tint" aria-hidden="true"></div>
-
       <div class="hero-visual">
         <video
           class="hero-visual-video"
@@ -114,12 +119,16 @@
           aria-label="Bridal makeup by Laraib"
           data-key-img="hero.video"
         ></video>
+        <div class="hero-visual-scrim" aria-hidden="true"></div>
       </div>
 
       <div class="container hero-inner">
-        <div class="hero-text">
+        <div class="hero-text stagger-reveal">
+          <svg class="stagger-flourish" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2c.5 5 2 8 7 10-5 2-6.5 5-7 10-.5-5-2-8-7-10 5-2 6.5-5 7-10z" />
+          </svg>
           <p class="hero-eyebrow" data-key="hero.eyebrow">Welcome to</p>
-          <h1 class="hero-title" data-key-html="hero.title">Makeup by <em>Laraib</em></h1>
+          <h1 class="hero-title" data-key-html="hero.title">Makeup by <em class="shimmer-text">Laraib</em></h1>
           <p class="hero-subtitle" data-key="hero.subtitle">
             Luxury makeup artistry for brides and every special occasion. Creating
             timeless, elegant looks that enhance your natural beauty. Based in
@@ -135,10 +144,216 @@
       </div>
     </section>
 
+    <!-- ===== Portfolio Gallery (Immersive Gallery / Spatial Grid) ===== -->
+    <section class="spatial" id="gallery">
+      <div class="spatial-orb spatial-orb-1"></div>
+      <div class="spatial-orb spatial-orb-2"></div>
+      <div class="spatial-orb spatial-orb-3"></div>
+      <div class="spatial-shell">
+        <div class="spatial-header stagger-reveal">
+          <svg class="stagger-flourish" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2c.5 5 2 8 7 10-5 2-6.5 5-7 10-.5-5-2-8-7-10 5-2 6.5-5 7-10z" />
+          </svg>
+          <p class="spatial-eyebrow">Immersive Gallery</p>
+          <h2 class="spatial-heading">Every Look, Brought to Life</h2>
+          <p class="spatial-sub">A closer look at the artistry behind every bridal transformation.</p>
+        </div>
+        <div class="spatial-grid reveal">
+          <div class="spatial-cell">
+            <div class="spatial-cell-inner">
+              <video src="images/hero-video-3.mp4" muted loop playsinline autoplay></video>
+              <div class="spatial-cell-overlay"></div>
+              <div class="spatial-cell-badge"><span class="spatial-badge-dot"></span>VIDEO</div>
+              <div class="spatial-cell-label">
+                <span class="spatial-cell-title">Bridal Glam in Motion</span>
+                <span class="spatial-cell-sub">Behind the Scenes</span>
+              </div>
+            </div>
+          </div>
+          <div class="spatial-cell">
+            <div class="spatial-cell-inner">
+              <div class="spatial-scroll-track" data-direction="left">
+                <div class="spatial-scroll-item">
+                  <img src="images/bridal-6.jpg" alt="Bridal makeup with deep red outfit and emerald jewellery" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Bridal Glam</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item">
+                  <img src="images/bridal-5.jpg" alt="Bridal makeup with floral jewellery and mint outfit" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Mint &amp; Florals</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item" aria-hidden="true">
+                  <img src="images/bridal-6.jpg" alt="" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Bridal Glam</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="spatial-cell">
+            <div class="spatial-cell-inner">
+              <img src="images/bridal-1.jpg" alt="Bridal makeup look with gold jewellery and soft dupatta drape" loading="lazy" />
+              <div class="spatial-cell-overlay"></div>
+              <div class="spatial-cell-label">
+                <span class="spatial-cell-title">Golden Hour</span>
+                <span class="spatial-cell-sub">Photo</span>
+              </div>
+            </div>
+          </div>
+          <div class="spatial-cell">
+            <div class="spatial-cell-inner">
+              <img src="images/hero-image.jpg" alt="Bride in gold bridal jewellery with warm glam makeup" loading="lazy" />
+              <div class="spatial-cell-overlay"></div>
+              <div class="spatial-cell-label">
+                <span class="spatial-cell-title">Timeless Bride</span>
+                <span class="spatial-cell-sub">Photo</span>
+              </div>
+            </div>
+          </div>
+          <div class="spatial-cell">
+            <div class="spatial-cell-inner">
+              <div class="spatial-scroll-track" data-direction="right">
+                <div class="spatial-scroll-item">
+                  <img src="images/bridal-7.jpg" alt="Bridal makeup with pastel outfit and floral backdrop" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Soft Pastels</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item">
+                  <img src="images/bridal.jpg" alt="Bride peeking from under an embellished veil with soft glam makeup" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Veiled Beauty</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item" aria-hidden="true">
+                  <img src="images/bridal-7.jpg" alt="" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Soft Pastels</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="spatial-cell">
+            <div class="spatial-cell-inner">
+              <div class="spatial-scroll-track" data-direction="bottom">
+                <div class="spatial-scroll-item">
+                  <img src="images/bridal-3.jpg" alt="Bridal makeup with green dupatta and bold eye makeup" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Bold Glam</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item">
+                  <img src="images/bridal-1.jpg" alt="Bridal makeup look with gold jewellery and soft dupatta drape" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Golden Hour</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item">
+                  <img src="images/hero-image.jpg" alt="Bride in gold bridal jewellery with warm glam makeup" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Timeless Bride</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item">
+                  <img src="images/bridal-6.jpg" alt="Bridal makeup with deep red outfit and emerald jewellery" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Bridal Glam</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+                <div class="spatial-scroll-item" aria-hidden="true">
+                  <img src="images/bridal-3.jpg" alt="" loading="lazy" />
+                  <div class="spatial-cell-overlay"></div>
+                  <div class="spatial-cell-label">
+                    <span class="spatial-cell-title">Bold Glam</span>
+                    <span class="spatial-cell-sub">Photo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="spatial-footer">
+          <span class="spatial-footer-dot"></span>
+          <span>6 looks featured</span>
+          <span class="spatial-footer-dot"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Hair Care ===== -->
+    <section class="hair-care" id="hair-care">
+      <div class="container">
+        <div class="hair-care-grid">
+          <div class="hair-care-copy stagger-reveal">
+            <svg class="stagger-flourish" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2c.5 5 2 8 7 10-5 2-6.5 5-7 10-.5-5-2-8-7-10 5-2 6.5-5 7-10z" />
+            </svg>
+            <p class="eyebrow" data-key="hairCare.eyebrow">Hair Care</p>
+            <h2 class="hair-care-heading">
+              <span class="hair-care-heading-light" data-key="hairCare.headingLight">Nourished and strong</span>
+              <span class="hair-care-heading-bold shimmer-text" data-key="hairCare.headingBold">from root to tip.</span>
+            </h2>
+            <p class="section-lead" data-key="hairCare.lead">Laraib's Hair Food is a rich, nourishing hair oil treatment — deeply conditioning strands, strengthening roots, and restoring natural shine with every wash.</p>
+            <a href="https://wa.me/923315017157?text=Hi%20Laraib%2C%20I%27d%20like%20to%20order%20the%20Hair%20Food%20treatment." class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-key="hairCare.cta">Order on WhatsApp</a>
+            <div class="hair-care-details">
+              <div>
+                <p class="hair-care-detail-label" data-key="hairCare.detail1Label">Formula</p>
+                <p class="hair-care-detail-text" data-key="hairCare.detail1Text">Nourishing hair oil blend in a 500ml pump bottle.</p>
+              </div>
+              <div>
+                <p class="hair-care-detail-label" data-key="hairCare.detail2Label">Best For</p>
+                <p class="hair-care-detail-text" data-key="hairCare.detail2Text">Dry, damaged &amp; colour-treated hair.</p>
+              </div>
+            </div>
+          </div>
+          <div class="hair-care-visual reveal">
+            <video
+              class="hair-care-video"
+              src="images/hair-product-video.mp4"
+              autoplay
+              muted
+              loop
+              playsinline
+              aria-label="Laraib's Hair Food nourishing hair oil"
+              data-key-img="hairCare.productVideo"
+            ></video>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== Services ===== -->
     <section class="services" id="services">
       <div class="container">
-        <div class="section-head section-head-center reveal">
+        <div class="section-head section-head-center stagger-reveal">
+          <svg class="stagger-flourish" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2c.5 5 2 8 7 10-5 2-6.5 5-7 10-.5-5-2-8-7-10 5-2 6.5-5 7-10z" />
+          </svg>
           <p class="eyebrow" data-key="services.eyebrow">Price List</p>
           <h2 data-key="services.heading">Our Services</h2>
           <p class="section-lead" data-key="services.lead">From bridal glamour to special occasion makeup, explore our services and pricing below. All prices are in PKR. Appointments are available through WhatsApp.</p>
@@ -148,30 +363,13 @@
       </div>
     </section>
 
-    <!-- ===== Portfolio Gallery ===== -->
-    <section class="gallery" id="gallery">
-      <div class="container">
-        <div class="section-head section-head-center reveal">
-          <p class="eyebrow" data-key="gallery.eyebrow">Portfolio</p>
-          <h2 data-key="gallery.heading">Our Brides</h2>
-          <p class="section-lead" data-key="gallery.lead">Every bride tells a unique story. Explore a curated collection of timeless bridal looks, crafted with elegance, artistry, and attention to every detail.</p>
-        </div>
-      </div>
-
-      <div class="bento2-gallery reveal" id="gallery-bento2">
-        <div class="bento2-left">
-          <div class="bento2-left-track" id="bento2-left-track"></div>
-        </div>
-        <div class="bento2-right">
-          <div class="bento2-right-track" id="bento2-right-track"></div>
-        </div>
-      </div>
-    </section>
-
     <!-- ===== Testimonials ===== -->
     <section class="testimonials" id="testimonials">
       <div class="container">
-        <div class="section-head section-head-center reveal">
+        <div class="section-head section-head-center stagger-reveal">
+          <svg class="stagger-flourish" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2c.5 5 2 8 7 10-5 2-6.5 5-7 10-.5-5-2-8-7-10 5-2 6.5-5 7-10z" />
+          </svg>
           <p class="eyebrow" data-key="testimonials.eyebrow">Kind Words</p>
           <h2 data-key="testimonials.heading">What Our Brides Say</h2>
           <p class="section-lead" data-key="testimonials.lead">A few words from real celebrations we've had the honour of being part of.</p>
@@ -222,7 +420,10 @@
     <!-- ===== Instagram ===== -->
     <section class="instagram" id="instagram">
       <div class="container">
-        <div class="section-head section-head-center reveal">
+        <div class="section-head section-head-center stagger-reveal">
+          <svg class="stagger-flourish" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2c.5 5 2 8 7 10-5 2-6.5 5-7 10-.5-5-2-8-7-10 5-2 6.5-5 7-10z" />
+          </svg>
           <p class="eyebrow" data-key="instagram.eyebrow">Follow Along</p>
           <h2 data-key="instagram.heading">@makeup_by_laraib</h2>
           <p class="section-lead" data-key="instagram.lead">Daily bridal inspiration and behind-the-scenes, on Instagram.</p>
@@ -258,8 +459,8 @@
         <p class="footer-heading">Explore</p>
         <ul>
           <li><a href="#home" data-key="header.navHome">Home</a></li>
-          <li><a href="#services" data-key="header.navServices">Services</a></li>
           <li><a href="#gallery" data-key="header.navGallery">Our Brides</a></li>
+          <li><a href="#services" data-key="header.navServices">Services</a></li>
           <li><a href="#testimonials" data-key="header.navTestimonials">Testimonials</a></li>
         </ul>
       </div>
@@ -305,12 +506,6 @@
       </a>
     </div>
   </footer>
-
-  <!-- ===== Lightbox ===== -->
-  <div class="lightbox" id="lightbox">
-    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close image">&times;</button>
-    <img src="" alt="" id="lightbox-img" />
-  </div>
 
   <script src="js/content-loader.js"></script>
   <script src="js/main.js"></script>

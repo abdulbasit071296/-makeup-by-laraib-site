@@ -17,61 +17,33 @@ function initSite() {
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll);
 
-  /* ---------- Hero entrance (plays once) ---------- */
-  /* The video plays continuously once it appears, so there's no
-     repeating theme cycle anymore — just a single relay on load:
-     each element only starts entering once the previous one's own
-     transition has actually finished (listens for transitionend),
-     video first, then eyebrow → title → subtitle → actions. */
+  /* ---------- Hero entrance ---------- */
+  /* The text (.hero-text) is a .stagger-reveal like every other
+     section now — see the generic block further down. Only the video
+     keeps its own bespoke entrance here (scale + slide, not a plain
+     fade), since it plays continuously once visible and that motion
+     is distinct from the text cascade. */
   if (heroSection) {
     const heroVideo = heroSection.querySelector(".hero-visual-video");
-    const heroEyebrow = heroSection.querySelector(".hero-eyebrow");
-    const heroTitle = heroSection.querySelector(".hero-title");
-    const heroSubtitle = heroSection.querySelector(".hero-subtitle");
-    const heroActions = heroSection.querySelector(".hero-actions");
-    const heroSequence = [heroVideo, heroEyebrow, heroTitle, heroSubtitle, heroActions].filter(Boolean);
 
-    if (prefersReduced) {
-      heroSequence.forEach((el) => el.classList.add("is-visible"));
-    } else if (heroSequence.length) {
-      const ENTER_MS = 1300;
-
-      function enterOneByOne(elements) {
-        let i = 0;
-        function enterNext() {
-          if (i >= elements.length) return;
-          const el = elements[i];
-          let advanced = false;
-          const advance = () => {
-            if (advanced) return;
-            advanced = true;
-            el.removeEventListener("transitionend", onEnd);
-            i += 1;
-            enterNext();
-          };
-          const onEnd = (e) => {
-            if (e.target === el) advance();
-          };
-          el.addEventListener("transitionend", onEnd);
-          el.classList.add("is-visible");
-          // Safety net only — the transitionend above is what normally
-          // advances the sequence; this just prevents a stall if a
-          // browser quirk ever drops the event.
-          setTimeout(advance, ENTER_MS + 300);
-        }
-        enterNext();
+    if (heroVideo) {
+      if (prefersReduced || !("IntersectionObserver" in window)) {
+        heroVideo.classList.add("is-visible");
+      } else {
+        // The hero is already in view on load, so this fires almost
+        // immediately — kept as an observer rather than a flat delay
+        // so scrolling away and back also replays it, same as every
+        // other reveal on the page.
+        const heroVideoObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              entry.target.classList.toggle("is-visible", entry.isIntersecting);
+            });
+          },
+          { threshold: 0.2 }
+        );
+        heroVideoObserver.observe(heroVideo);
       }
-
-      enterOneByOne(heroSequence);
-
-      // Absolute backstop: on a slow/janky device the per-element relay
-      // above can stall partway (confirmed happening — subtitle and the
-      // WhatsApp button staying invisible indefinitely), leaving content
-      // permanently hidden. Force everything visible after a fixed delay
-      // no matter what state the relay is in.
-      setTimeout(() => {
-        heroSequence.forEach((el) => el.classList.add("is-visible"));
-      }, 4000);
     }
 
     if (heroVideo) {
@@ -191,202 +163,126 @@ function initSite() {
     }
   }
 
-  /* ---------- Gallery lightbox ---------- */
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImg = document.getElementById("lightbox-img");
-  const lightboxClose = document.getElementById("lightbox-close");
-
-  function openLightbox(src, alt) {
-    lightboxImg.src = src;
-    lightboxImg.alt = alt || "";
-    lightbox.classList.add("open");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeLightbox() {
-    lightbox.classList.remove("open");
-    document.body.style.overflow = "";
-    lightboxImg.src = "";
-  }
-
-  const galleryBento2 = document.getElementById("gallery-bento2");
-  if (galleryBento2) {
-    galleryBento2.addEventListener("click", (e) => {
-      const tile = e.target.closest(".bento2-card, .bento2-cell-media");
-      if (!tile || tile.getAttribute("data-media") === "video") return;
-      const full = tile.getAttribute("data-full");
-      const img = tile.querySelector("img");
-      openLightbox(full, img ? img.alt : "");
-    });
-  }
-
-  lightboxClose.addEventListener("click", closeLightbox);
-  lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-
-  // Single Escape handler for both dismissible overlays (previously two
-  // separate keydown listeners did the same job).
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
     closeMenu();
-    closeLightbox();
   });
 
-  /* ---------- Bento gallery: step sequencer ----------
-     One combined loop. Left column (3 uniform cards, card 2 slightly
-     larger) takes 3 downward steps, same as before. Right side is ONE
-     continuous strip — row A (cards 4, 5) then row B (cards 6-9),
-     repeated twice (A, B, A, B) — and always shows one full A+B pair
-     at once. A step slides the strip up by whichever row is currently
-     on top, so that row scrolls out while the other row moves up into
-     its place, and the row that scrolled out reappears at the bottom
-     from the repeated copy. Six cards stay visible throughout; only
-     their top/bottom order swaps. Two such steps (A out/B in, then B
-     out/A in) return the strip to its starting look, at which point
-     position resets silently and the cycle repeats. */
-  function initBentoStepper() {
-    const leftBody = document.querySelector(".bento2-left");
-    const leftTrack = document.getElementById("bento2-left-track");
-    const rightBody = document.querySelector(".bento2-right");
-    const rightTrack = document.getElementById("bento2-right-track");
-    if (!leftBody || !leftTrack || !rightBody || !rightTrack) return;
-    if (leftTrack.children.length === 0 || rightTrack.children.length === 0) return;
+  /* ---------- Spatial grid: per-cell image scroll ---------- */
+  /* Cells with more than one image auto-advance through them, holding
+     on each for a while before stepping to the next. Looping is
+     seamless via a duplicate of the first image appended at the end
+     of each track — stepping onto it looks identical to the real
+     first image, so the reset back to position 0 is invisible (same
+     trick used for the old gallery's tracks). Cells with only one
+     image (or the video cell) have no .spatial-scroll-track at all,
+     so they're untouched.
 
-    const EASE = "cubic-bezier(.65,0,.35,1)";
-    const LEFT_STEP_MS = 1050;
-    const RIGHT_STEP_MS = 800;
-    const SETTLE_MS = 250;
-    const LONG_PAUSE_MS = 1600; // pause between row A's step and row B's step
-    const GAP = 10; // matches the 0.625rem gap in CSS
-
-    if (prefersReduced) {
-      // Respect reduced-motion here (unlike the Instagram marquee) since
-      // this is a much larger, more insistent full-body motion, not a
-      // small background strip.
-      return;
-    }
-
-    let cancelled = false;
-    let leftCardH = 0;
-    let rowAH = 0;
-    let rowBH = 0;
-
-    function measure() {
-      // Cards have no CSS height of their own — the images inside rely
-      // on height:100% of their card, so without an explicit pixel
-      // height set here that's a circular reference that resolves to
-      // ~0. Compute a real, FIXED height once from each container and
-      // apply it directly — never recomputed mid-animation, only on
-      // load/resize, so the layout never shifts while stepping.
-      const leftCards = leftTrack.querySelectorAll(".bento2-card");
-      leftCardH = (leftBody.clientHeight - GAP * 2) / 3;
-      leftCards.forEach((c) => (c.style.height = leftCardH + "px"));
-
-      // Row A : Row B keeps the same 1:2 share of the right body's
-      // total height that the old static layout used, minus the one
-      // gap that sits between them when both are visible together.
-      const rightContentH = rightBody.clientHeight - GAP;
-      rowAH = rightContentH / 3;
-      rowBH = rightContentH - rowAH;
-      rightTrack.querySelectorAll(":scope > .bento2-row-a").forEach((r) => (r.style.height = rowAH + "px"));
-      rightTrack.querySelectorAll(":scope > .bento2-row-b").forEach((r) => (r.style.height = rowBH + "px"));
-    }
-    measure();
-    window.addEventListener("resize", measure);
-
-    function setTransform(el, y, transitionMs) {
-      el.style.transition = transitionMs ? `transform ${transitionMs}ms ${EASE}` : "none";
-      el.style.transform = `translateY(${y}px)`;
-    }
-
-    const leftSlot = () => leftCardH + GAP;
-
-    // Start on the middle copy of the tripled track so there's always a
-    // same-content copy both ahead and behind to land on.
-    setTransform(leftTrack, -leftSlot() * 3, 0);
-    let leftPos = -leftSlot() * 3;
-    setTransform(rightTrack, 0, 0);
-    let rightPos = 0;
+     data-direction picks both the axis and which edge the new image
+     enters from: "bottom"/"top" are vertical (translateY), "left"/
+     "right" are horizontal (translateX). "bottom"/"right" use normal
+     DOM order, so item 0 sits flush with the window at pos 0 and each
+     step moves further negative to reveal the next item. "top"/"left"
+     use a *reversed* flex order (column-reverse/row-reverse, set in
+     CSS) so the new image enters from the opposite edge — but the
+     reversed track's own box is never explicitly widened to fit every
+     item, so item 0 ALSO ends up flush with the window at pos 0
+     (confirmed by measuring actual rects), and later items overflow
+     to the other side, needing a POSITIVE step to bring them in. So
+     the two cases are simple mirror images of each other, not one
+     counting up and the other counting down from the far end. */
+  function initSpatialCellScroll() {
+    const tracks = document.querySelectorAll(".spatial-scroll-track");
+    if (!tracks.length) return;
 
     function wait(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    async function runLeft() {
-      for (let i = 0; i < 3; i++) {
-        if (cancelled) return;
-        leftPos += leftSlot();
-        setTransform(leftTrack, leftPos, LEFT_STEP_MS);
-        await wait(LEFT_STEP_MS + SETTLE_MS);
+    tracks.forEach((track, trackIndex) => {
+      const items = track.children;
+      const realCount = items.length - 1; // last child is the duplicate of the first
+      if (realCount < 2) return;
+
+      const cell = track.closest(".spatial-cell");
+      const direction = track.getAttribute("data-direction") || "bottom";
+      const horizontal = direction === "left" || direction === "right";
+      const reversed = direction === "top" || direction === "left";
+      let itemSize = 0;
+
+      function measure() {
+        const rect = cell.getBoundingClientRect();
+        itemSize = horizontal ? rect.width : rect.height;
+        Array.from(items).forEach((item) => {
+          if (horizontal) item.style.width = itemSize + "px";
+          else item.style.height = itemSize + "px";
+        });
       }
-      // Landed back on the identical middle-copy position — reset
-      // silently (no transition) so the count never grows unbounded.
-      leftPos = -leftSlot() * 3;
-      setTransform(leftTrack, leftPos, 0);
-    }
+      measure();
+      window.addEventListener("resize", measure);
 
-    async function runRight() {
-      // Step 1: row A (currently on top) scrolls up and out; row B
-      // moves up to take its place.
-      if (cancelled) return;
-      rightPos -= rowAH + GAP;
-      setTransform(rightTrack, rightPos, RIGHT_STEP_MS);
-      await wait(RIGHT_STEP_MS + SETTLE_MS);
-      if (cancelled) return;
-      await wait(LONG_PAUSE_MS);
+      // Sizes are set either way (above) so the first image always
+      // renders correctly; reduced-motion just skips the stepping loop.
+      if (prefersReduced) return;
 
-      // Step 2: row B (now on top) scrolls up and out; the repeated
-      // copy of row A moves up to take its place — visually identical
-      // to where the strip started.
-      if (cancelled) return;
-      rightPos -= rowBH + GAP;
-      setTransform(rightTrack, rightPos, RIGHT_STEP_MS);
-      await wait(RIGHT_STEP_MS + SETTLE_MS);
+      const STEP_MS = 900;
+      const EASE = "cubic-bezier(.65,0,.35,1)";
+      // Slight per-cell stagger so multiple cells don't all step at
+      // the exact same instant.
+      const HOLD_MS = 2600 + trackIndex * 350;
 
-      // Reset silently (no transition) back to the start position so
-      // the offset never grows unbounded.
-      rightPos = 0;
-      setTransform(rightTrack, rightPos, 0);
-    }
-
-    // Left finishes -> right starts immediately -> right finishes ->
-    // left starts immediately. The only deliberate pause is the one
-    // inside runRight, between its two steps.
-    async function loop() {
-      while (!cancelled) {
-        await runLeft();
-        if (cancelled) return;
-
-        await runRight();
-        if (cancelled) return;
+      function posFor(k) {
+        // Reversed tracks (row-reverse/column-reverse) render their
+        // first item already flush with the window at 0 — confirmed
+        // by measuring actual rects, since the track's own box is
+        // only one item wide (it's never explicitly widened to fit
+        // all of them) and the flex items simply overflow toward the
+        // reversed main-end. So later items sit on the opposite side
+        // and need a POSITIVE shift to come in, the mirror image of
+        // the normal case rather than counting down from the far end.
+        return reversed ? k * itemSize : -k * itemSize;
       }
-    }
 
-    const gallery = document.getElementById("gallery-bento2");
+      function setTransform(pos, withTransition) {
+        const axis = horizontal ? "X" : "Y";
+        track.style.transition = withTransition ? `transform ${STEP_MS}ms ${EASE}` : "none";
+        track.style.transform = `translate${axis}(${pos}px)`;
+      }
+      setTransform(posFor(0), false);
 
-    // Self-heal on return, same reasoning as the old gallery carousel:
-    // don't trust whatever state a background tab left this in.
-    if ("IntersectionObserver" in window) {
-      let running = false;
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && !running) {
-              running = true;
-              loop();
-            }
-          });
-        },
-        { threshold: 0.2 }
-      );
-      observer.observe(gallery);
-    } else {
-      loop();
-    }
+      async function loop() {
+        for (let k = 1; k <= realCount; k++) {
+          await wait(HOLD_MS);
+          setTransform(posFor(k), true);
+          await wait(STEP_MS);
+        }
+        // Landed on the duplicate of the first image — reset silently
+        // (no transition) once it's held a moment, then repeat.
+        await wait(HOLD_MS);
+        setTransform(posFor(0), false);
+        loop();
+      }
+
+      if ("IntersectionObserver" in window) {
+        let running = false;
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting && !running) {
+                running = true;
+                loop();
+              }
+            });
+          },
+          { threshold: 0.2 }
+        );
+        observer.observe(cell);
+      } else {
+        loop();
+      }
+    });
   }
-
-  initBentoStepper();
+  initSpatialCellScroll();
 
   /* ---------- Instagram marquee: duplicate for seamless loop ---------- */
   const instaTrack = document.getElementById("insta-track");
@@ -442,6 +338,80 @@ function initSite() {
       { threshold: 0.1, rootMargin: "0px 0px -6% 0px" }
     );
     revealEls.forEach((el) => observer.observe(el));
+  }
+
+  /* ---------- Magic heading reveal ---------- */
+  /* Section titles (not the hero, which has its own entrance relay
+     above) split into words that rise into place with a stagger.
+     Unlike .reveal, this keeps observing and toggles every time the
+     heading crosses the viewport, so it replays on the way in AND
+     plays in reverse on the way out. Runs after content.json has
+     already populated these headings (initSite only runs once
+     content:ready has fired), so the real text gets split, not a
+     placeholder. */
+  const magicHeadings = document.querySelectorAll(".section-head h2");
+  if (magicHeadings.length) {
+    const escapeForSplit = (str) =>
+      String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    magicHeadings.forEach((h) => {
+      const tokens = h.textContent.split(/(\s+)/);
+      let wordIndex = 0;
+      h.innerHTML = tokens
+        .map((token) => {
+          if (token === "" || /^\s+$/.test(token)) return token;
+          const delay = wordIndex * 60;
+          wordIndex++;
+          return (
+            '<span class="magic-word"><span class="magic-word-inner" style="--word-delay:' +
+            delay +
+            'ms">' +
+            escapeForSplit(token) +
+            "</span></span>"
+          );
+        })
+        .join("");
+      h.classList.add("magic-heading");
+    });
+
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      magicHeadings.forEach((h) => h.classList.add("in-view"));
+    } else {
+      const headingObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("in-view", entry.isIntersecting);
+          });
+        },
+        { threshold: 0.3 }
+      );
+      magicHeadings.forEach((h) => headingObserver.observe(h));
+    }
+  }
+
+  /* ---------- Text cascade (every section) ---------- */
+  /* Same toggle-on-every-crossing model as the magic heading above,
+     applied to a whole stack of elements per section (see
+     .stagger-reveal > * in style.css) instead of split words — so
+     leaving and re-entering any section always replays its staggered
+     fade-in. Originally built for Hair Care alone, now shared by
+     every section's intro copy (.hero-text, .spatial-header,
+     .section-head, .hair-care-copy). */
+  const staggerReveals = document.querySelectorAll(".stagger-reveal");
+  if (staggerReveals.length) {
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      staggerReveals.forEach((el) => el.classList.add("in-view"));
+    } else {
+      const staggerObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("in-view", entry.isIntersecting);
+          });
+        },
+        { threshold: 0.2 }
+      );
+      staggerReveals.forEach((el) => staggerObserver.observe(el));
+    }
   }
 }
 
