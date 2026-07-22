@@ -73,7 +73,6 @@
     header: renderHeaderTab,
     hero: renderHeroTab,
     services: renderServicesTab,
-    gallery: renderGalleryTab,
     testimonials: renderTestimonialsTab,
     instagram: renderInstagramTab,
     footer: renderFooterTab,
@@ -485,69 +484,6 @@
       renderCards();
     });
     container.appendChild(addCardBtn);
-  }
-
-  function renderGalleryTab(container) {
-    const h = el("h2");
-    h.textContent = "Our Brides (Gallery)";
-    container.appendChild(h);
-    const hint = el("p", "panel-hint");
-    hint.textContent = "Photos shown in the scrolling portfolio carousel. Add or remove photos.";
-    container.appendChild(hint);
-
-    sectionHead(container, "gallery", "Our Brides");
-
-    const list = el("div");
-    container.appendChild(list);
-
-    function renderImages() {
-      list.innerHTML = "";
-      content.gallery.images.forEach((img, i) => {
-        const item = el("div", "repeat-item");
-        const head = el("div", "repeat-item-head");
-        const strong = el("strong");
-        strong.textContent = "Photo " + (i + 1);
-        head.appendChild(strong);
-        item.appendChild(head);
-
-        imageField(item, {
-          key: `gallery.images.${i}.src`,
-          label: "Photo",
-          removable: true,
-          onRemove: () => {
-            content.gallery.images.splice(i, 1);
-            renderImages();
-          },
-        });
-
-        const altField = el("div", "mini-field");
-        const altLabel = el("label");
-        altLabel.textContent = "Description (for accessibility)";
-        altField.appendChild(altLabel);
-        const altInput = el("input");
-        altInput.type = "text";
-        altInput.value = img.alt || "";
-        altInput.addEventListener("input", () => {
-          img.alt = altInput.value;
-          markDirty();
-        });
-        altField.appendChild(altInput);
-        item.appendChild(altField);
-
-        list.appendChild(item);
-      });
-    }
-    renderImages();
-
-    const addBtn = el("button", "add-btn");
-    addBtn.type = "button";
-    addBtn.textContent = "+ Add photo";
-    addBtn.addEventListener("click", () => {
-      content.gallery.images.push({ src: "", alt: "" });
-      markDirty();
-      renderImages();
-    });
-    container.appendChild(addBtn);
   }
 
   function renderTestimonialsTab(container) {
